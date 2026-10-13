@@ -41,7 +41,7 @@ jobs:
         run: |
           docker run --rm --platform linux/arm64 \
             -v "$GITHUB_WORKSPACE:/workspace" -w /workspace/tracker \
-            debian:bullseye bash -euxc '
+            debian:bookworm bash -euxc '
               apt-get update
               DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
                 g++ make libsdl2-dev libasound2-dev
