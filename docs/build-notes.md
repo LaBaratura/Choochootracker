@@ -131,16 +131,12 @@ copy.
 ## Raspberry Pi (ARM)
 
 The release-only GitHub Actions workflow `.github/workflows/raspberry-pi.yml`
-runs only for `v*` tags. It produces two complete tarballs as the
-`choochootracker-raspberry-pi` workflow artifact:
+runs only for `v*` tags. It uses GitHub's native ARM runner to produce the
+`*-RaspberryPi-aarch64.tar.gz` artifact for Raspberry Pi OS 64-bit on Pi 3B+,
+Pi 4, Pi 5, Zero 2 W, and compatible Compute Modules.
 
-- `*-RaspberryPi-armv6l.tar.gz` for Raspberry Pi OS 32-bit. Its ARMv6 build
-  runs on all Raspberry Pi models, including Pi 1/Zero and Pi 3B+.
-- `*-RaspberryPi-aarch64.tar.gz` for Raspberry Pi OS 64-bit on Pi 3B+, Pi 4,
-  Pi 5, Zero 2 W, and compatible Compute Modules.
-
-Both archives contain the executable, runtime assets, manual, and licenses.
-They require SDL2 on the target (`sudo apt install libsdl2-2.0-0`). Launch the
+The archive contains the executable, runtime assets, manual, and licenses. It
+requires SDL2 on the target (`sudo apt install libsdl2-2.0-0`). Launch the
 extracted application with `./chipnomad.sh`.
 
 ## Web

@@ -4,11 +4,8 @@ ChooChooTracker for Raspberry Pi
 This package contains a native Linux build of ChooChooTracker, including all
 runtime assets, instruments, the user manual, and licenses.
 
-Choose the archive that matches your operating system:
-- RaspberryPi-armv6l: Raspberry Pi OS 32-bit; works on every Raspberry Pi
-  model, including Pi 1, Zero, 2, 3B+, 4, 5, and Compute Modules.
-- RaspberryPi-aarch64: Raspberry Pi OS 64-bit; requires a Raspberry Pi 3B+,
-  Pi 4, Pi 5, Zero 2 W, or compatible 64-bit Compute Module.
+This AArch64 package requires Raspberry Pi OS 64-bit and a Raspberry Pi 3B+,
+Pi 4, Pi 5, Zero 2 W, or compatible 64-bit Compute Module.
 
 REQUIREMENTS:
 - Raspberry Pi OS or another compatible ARM Linux distribution
