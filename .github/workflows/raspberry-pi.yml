@@ -32,7 +32,7 @@ jobs:
               make -j2 -f Makefile.linux linux-package \
                 PACKAGE_ARCH=armv6l PACKAGE_SUFFIX=RaspberryPi-armv6l \
                 PACKAGE_README=packaging/raspberrypi/README.txt \
-                COMMON_CFLAGS='-std=c++17 -Wall -g -Os -DTEST'
+                COMMON_CFLAGS="-std=c++17 -Wall -g -Os -DTEST"
               mkdir -p ../releases
               mv build/linux/*-RaspberryPi-armv6l.tar.gz ../releases/
             '
@@ -48,7 +48,7 @@ jobs:
               make -j2 -f Makefile.linux linux-package \
                 PACKAGE_ARCH=aarch64 PACKAGE_SUFFIX=RaspberryPi-aarch64 \
                 PACKAGE_README=packaging/raspberrypi/README.txt \
-                COMMON_CFLAGS='-std=c++17 -Wall -g -Os -DTEST'
+                COMMON_CFLAGS="-std=c++17 -Wall -g -Os -DTEST"
               mkdir -p ../releases
               mv build/linux/*-RaspberryPi-aarch64.tar.gz ../releases/
             '
