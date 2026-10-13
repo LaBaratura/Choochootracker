@@ -1,0 +1,72 @@
+name: Raspberry Pi release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  raspberry-pi:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enable ARM emulation
+        uses: docker/setup-qemu-action@v4
+        with:
+          platforms: arm64,arm
+
+      # ARMv6 is the baseline of Raspberry Pi OS 32-bit, so this package also
+      # runs on newer Raspberry Pi models booted with the 32-bit OS.
+      - name: Build Raspberry Pi OS 32-bit package
+        run: |
+          docker run --rm --platform linux/arm/v6 \
+            -v "$GITHUB_WORKSPACE:/workspace" -w /workspace/tracker \
+            balenalib/rpi-raspbian:bullseye-20230705 bash -euxc '
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+                g++ make libsdl2-dev libasound2-dev
+              make -j2 -f Makefile.linux linux-package \
+                PACKAGE_ARCH=armv6l PACKAGE_SUFFIX=RaspberryPi-armv6l \
+                PACKAGE_README=packaging/raspberrypi/README.txt \
+                COMMON_CFLAGS='-std=c++17 -Wall -g -Os -DTEST'
+              mkdir -p ../releases
+              mv build/linux/*-RaspberryPi-armv6l.tar.gz ../releases/
+            '
+
+      - name: Build Raspberry Pi OS 64-bit package
+        run: |
+          docker run --rm --platform linux/arm64 \
+            -v "$GITHUB_WORKSPACE:/workspace" -w /workspace/tracker \
+            debian:bullseye bash -euxc '
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+                g++ make libsdl2-dev libasound2-dev
+              make -j2 -f Makefile.linux linux-package \
+                PACKAGE_ARCH=aarch64 PACKAGE_SUFFIX=RaspberryPi-aarch64 \
+                PACKAGE_README=packaging/raspberrypi/README.txt \
+                COMMON_CFLAGS='-std=c++17 -Wall -g -Os -DTEST'
+              mkdir -p ../releases
+              mv build/linux/*-RaspberryPi-aarch64.tar.gz ../releases/
+            '
+
+      - name: Validate release packages
+        run: |
+          armv6=$(find releases -maxdepth 1 -name '*-RaspberryPi-armv6l.tar.gz' -print -quit)
+          arm64=$(find releases -maxdepth 1 -name '*-RaspberryPi-aarch64.tar.gz' -print -quit)
+          test -n "$armv6" && test -n "$arm64"
+          tar -tzf "$armv6" | grep -Fxq 'ChooChooTracker-Linux/instruments/FACTORY/catalog.tsv'
+          tar -tzf "$arm64" | grep -Fxq 'ChooChooTracker-Linux/instruments/FACTORY/catalog.tsv'
+          tar -xOf "$armv6" ChooChooTracker-Linux/choochootracker > "$RUNNER_TEMP/choochootracker-armv6l"
+          tar -xOf "$arm64" ChooChooTracker-Linux/choochootracker > "$RUNNER_TEMP/choochootracker-aarch64"
+          file "$RUNNER_TEMP/choochootracker-armv6l" | grep -Fq 'ELF 32-bit LSB executable, ARM'
+          file "$RUNNER_TEMP/choochootracker-aarch64" | grep -Fq 'ELF 64-bit LSB executable, ARM aarch64'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: choochootracker-raspberry-pi
+          path: releases/*-RaspberryPi-*.tar.gz
+          if-no-files-found: error
