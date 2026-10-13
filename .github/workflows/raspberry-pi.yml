@@ -60,10 +60,9 @@ jobs:
           test -n "$armv6" && test -n "$arm64"
           tar -tzf "$armv6" | grep -Fxq 'ChooChooTracker-Linux/instruments/FACTORY/catalog.tsv'
           tar -tzf "$arm64" | grep -Fxq 'ChooChooTracker-Linux/instruments/FACTORY/catalog.tsv'
-          tar -xOf "$armv6" ChooChooTracker-Linux/choochootracker > "$RUNNER_TEMP/choochootracker-armv6l"
-          tar -xOf "$arm64" ChooChooTracker-Linux/choochootracker > "$RUNNER_TEMP/choochootracker-aarch64"
-          file "$RUNNER_TEMP/choochootracker-armv6l" | grep -Fq 'ELF 32-bit LSB executable, ARM'
-          file "$RUNNER_TEMP/choochootracker-aarch64" | grep -Fq 'ELF 64-bit LSB executable, ARM aarch64'
+          set -o pipefail
+          tar -xOf "$armv6" ChooChooTracker-Linux/choochootracker | file - | grep -Fq 'ELF 32-bit LSB executable, ARM'
+          tar -xOf "$arm64" ChooChooTracker-Linux/choochootracker | file - | grep -Fq 'ELF 64-bit LSB executable, ARM aarch64'
 
       - uses: actions/upload-artifact@v4
         with:
