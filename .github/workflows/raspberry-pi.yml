@@ -35,10 +35,12 @@ jobs:
         run: |
           arm64=$(find releases -maxdepth 1 -name '*-RaspberryPi-aarch64.tar.gz' -print -quit)
           test -n "$arm64"
-          tar -tzf "$arm64" | grep -Fxq 'ChooChooTracker-Linux/instruments/FACTORY/catalog.tsv'
           mkdir validate
+          tar -tzf "$arm64" > validate/files.txt
+          grep -Fx 'ChooChooTracker-Linux/instruments/FACTORY/catalog.tsv' validate/files.txt
           tar -xzf "$arm64" -C validate ChooChooTracker-Linux/choochootracker
-          file validate/ChooChooTracker-Linux/choochootracker | grep -Fq 'ELF 64-bit LSB executable, ARM aarch64'
+          readelf -h validate/ChooChooTracker-Linux/choochootracker > validate/elf-header.txt
+          grep -Eq 'Machine: +AArch64' validate/elf-header.txt
 
       - uses: actions/upload-artifact@v4
         with:
