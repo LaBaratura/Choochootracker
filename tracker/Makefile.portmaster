@@ -61,6 +61,7 @@ PortMaster-deploy: PortMaster
 	mkdir -p $(PORT_DIR)/licenses ../releases
 	cp $(BUILD)/choochootracker.aarch64 $(PORT_DIR)/
 	cp packaging/portmaster/choochootracker.gptk $(PORT_DIR)/
+	cp -r packaging/portmaster/xf40h $(PORT_DIR)/
 	cp -r packaging/common/. $(PORT_DIR)/
 	cp ../docs/USER_MANUAL.md $(PORT_DIR)/
 	cp ../LICENSE $(PORT_DIR)/licenses/LICENSE.choochootracker.md

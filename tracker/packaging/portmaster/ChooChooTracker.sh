@@ -36,6 +36,14 @@ fi
 
 bind_directories ~/.choochootracker "$CONFDIR/.choochootracker"
 
+# Compatibilidad XF40H opcional. Las demás consolas usan la ruta original.
+if [ -f "$CONFDIR/xf40h-arkos4clone.enabled" ]; then
+  bash "$GAMEDIR/xf40h/launch.sh"
+  xf40h_rc=$?
+  pm_finish
+  exit "$xf40h_rc"
+fi
+
 $GPTOKEYB "choochootracker.${DEVICE_ARCH}" -c "./choochootracker.gptk" &
 pm_platform_helper "$GAMEDIR/choochootracker.${DEVICE_ARCH}"
 "./choochootracker.${DEVICE_ARCH}"

@@ -29,3 +29,15 @@ Mixer provides per-track level, mute/solo, Clouds Reverb send and tick-synchroni
 Instrument FX use the existing FX columns and remain active until the next note trigger.
 
 ChipNomad is by Megus. Braids, Plaits, Clouds and stmlib are by Emilie Gillet / Mutable Instruments.
+
+## XF40H ArkOS4Clone compatibility (experimental)
+
+An optional, disabled-by-default compatibility layer for XF40H is
+included in `xf40h/`.
+
+It can be enabled on verified hardware by creating
+`/roms/ports/choochootracker/conf/xf40h-arkos4clone.enabled`.
+
+See `xf40h/README.md` for dependencies, limitations and safety notes.
+
+Other consoles continue using the original PortMaster launch path.
